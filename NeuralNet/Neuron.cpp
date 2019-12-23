@@ -7,7 +7,7 @@
 //
 #include "Headers.hpp"
 
-Neuron::Neuron(std::vector<double> &weight, double &bias) {
+Neuron::Neuron(const vector<double> &weight, const double &bias) {
 	m_weight = weight;
 	m_bias = bias;
 };
@@ -15,7 +15,7 @@ Neuron::Neuron(std::vector<double> &weight, double &bias) {
 Neuron::~Neuron() {
 };
 
-double Neuron::feedforward(std::vector<double> &input) {
+double Neuron::feedforward(const vector<double> &input) {
 	double lin_comb = 0;
 	double *plin_comb = &lin_comb;
 	*plin_comb = m_weight * input + m_bias;
@@ -24,15 +24,15 @@ double Neuron::feedforward(std::vector<double> &input) {
 
 
 
-void Neuron::gradient_descent(std::vector<double> &gradient, double learning_rate) {
+void Neuron::gradient_descent(const vector<double> &gradient, double learning_rate) {
 	for (size_t i = 0; i < gradient.size() - 1; i++) {
 		m_weight[i] = m_weight[i] - learning_rate * gradient[i];
 	}
 	m_bias = m_bias - learning_rate * gradient.back();
 };
 
-std::vector<double> Neuron::backpropagation(std::vector<double> &prediction) {
-	std::vector<double> gradient;
+vector<double> Neuron::backpropagation(const vector<double> &prediction) {
+	vector<double> gradient;
 	double lin_comb = 0;
 	double *plin_comb = &lin_comb;
 	*plin_comb = m_weight * prediction + m_bias;
@@ -43,8 +43,8 @@ std::vector<double> Neuron::backpropagation(std::vector<double> &prediction) {
 	return gradient;
 };
 
-std::vector<double> Neuron::backpropagation2(std::vector<double> &prediction) {
-	std::vector<double> gradient;
+vector<double> Neuron::backpropagation2(const vector<double> &prediction) {
+	vector<double> gradient;
 	double lin_comb = 0;
 	double *plin_comb = &lin_comb;
 	*plin_comb = m_weight * prediction + m_bias;
@@ -54,8 +54,8 @@ std::vector<double> Neuron::backpropagation2(std::vector<double> &prediction) {
 	return gradient;
 };
 
-std::vector<double> Neuron::backpropagation3(std::vector<double> &prediction, std::vector<double> &trueValue) {
-	std::vector<double> gradient;
+vector<double> Neuron::backpropagation3(const vector<double> &prediction, const vector<double> &trueValue) {
+	vector<double> gradient;
 	for (size_t i = 0; i < prediction.size(); i++) {
 		gradient.push_back(-2 * (trueValue[i] - prediction[i]));
 	}

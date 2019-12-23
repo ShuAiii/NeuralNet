@@ -7,7 +7,7 @@
 //
 #include "Headers.hpp"
 
-Net::Net(std::vector<std::vector<std::vector<double>>> &weight, std::vector<std::vector<double> > &bias) {
+Net::Net(const vector<vector<vector<double>>> &weight, const vector<vector<double> > &bias) {
 	m_weight = weight;
 	m_bias = bias;
 	for (size_t i = 0; i < weight.size(); i++) {
@@ -23,8 +23,8 @@ Net::Net(std::vector<std::vector<std::vector<double>>> &weight, std::vector<std:
 Net::~Net() {
 };
 
-std::vector<std::vector<double>> Net::feedforward(std::vector<double> &input) {
-	std::vector<std::vector<double>> prediction;
+vector<vector<double>> Net::feedforward(const vector<double> &input) {
+	vector<vector<double>> prediction;
 	prediction.push_back(input);
 	for (size_t i = 0; i < m_weight.size(); i++) {
 		prediction.push_back(net[i]->feedforward(prediction[i]));
@@ -32,10 +32,10 @@ std::vector<std::vector<double>> Net::feedforward(std::vector<double> &input) {
 	return prediction;
 };
 
-std::vector<std::vector<std::vector<double>>> Net::backpropagation(std::vector<std::vector<double>> &prediction, std::vector<double> &trueValue) {
-	std::vector<std::vector<std::vector<double>>> gradient;
-	std::vector<std::vector<double>> jacobi_mat;
-	std::vector<double> jacobi_sum;
+vector<vector<vector<double>>> Net::backpropagation(const vector<vector<double>> &prediction, const vector<double> &trueValue) {
+	vector<vector<vector<double>>> gradient;
+	vector<vector<double>> jacobi_mat;
+	vector<double> jacobi_sum;
 	for (size_t i = 0; i < m_weight.size(); i++) {
 		gradient.push_back(net[i]->backpropagation(prediction[i]));
 	}
@@ -50,7 +50,7 @@ std::vector<std::vector<std::vector<double>>> Net::backpropagation(std::vector<s
 	return gradient;
 };
 
-void Net::gradient_descent(std::vector<std::vector<std::vector<double>>> &gradient, double learning_rate) {
+void Net::gradient_descent(const vector<vector<vector<double>>> &gradient, double learning_rate) {
 	for (size_t i = 0; i < gradient.size(); i++) {
 		net[i]->gradient_descent(gradient[i], learning_rate);
 	};

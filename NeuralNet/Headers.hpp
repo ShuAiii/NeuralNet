@@ -29,13 +29,13 @@ private:
 	vector<double> m_weight;
 	double m_bias;
 public:
-	Neuron(vector<double> &weight, double &bias);
+	Neuron(const vector<double> &weight, const double &bias);
 	~Neuron();
-	double feedforward(vector<double> &input);
-	vector<double> backpropagation(vector<double> &prediction);
-	vector<double> backpropagation2(vector<double> &prediction);
-	vector<double> backpropagation3(vector<double> &prediction, vector<double> &trueValue);
-	void gradient_descent(vector<double> &gradient, double learning_rate);
+	double feedforward(const vector<double> &input);
+	vector<double> backpropagation(const vector<double> &prediction);
+	vector<double> backpropagation2(const vector<double> &prediction);
+	vector<double> backpropagation3(const vector<double> &prediction, const vector<double> &trueValue);
+	void gradient_descent(const vector<double> &gradient, double learning_rate);
 
 };
 
@@ -46,13 +46,13 @@ private:
 	vector<vector<double> > m_weight;
 	vector<double> m_bias;
 public:
-	Layer(vector<vector<double> > &weight, vector<double> &bias);
+	Layer(const vector<vector<double> > &weight, const vector<double> &bias);
 	~Layer();
-	vector<double> feedforward(vector<double> &input);
-	vector<vector<double>> backpropagation(vector<double> &prediction);
-	vector<vector<double>> backpropagation2(vector<double> &prediction);
-	vector<vector<double>> backpropagation3(vector<double> &prediction, vector<double> &trueValue);
-	void gradient_descent(vector<vector<double>> &gradient, double learning_rate);
+	vector<double> feedforward(const vector<double> &input);
+	vector<vector<double>> backpropagation(const vector<double> &prediction);
+	vector<vector<double>> backpropagation2(const vector<double> &prediction);
+	vector<vector<double>> backpropagation3(const vector<double> &prediction, const vector<double> &trueValue);
+	void gradient_descent(const vector<vector<double>> &gradient, double learning_rate);
 };
 
 
@@ -63,11 +63,11 @@ private:
 	vector<vector<vector<double>>> m_weight;
 	vector<vector<double>> m_bias;
 public:
-	Net(vector<vector<vector<double> >> &weight, vector<vector<double> > &bias);
+	Net(const vector<vector<vector<double> >> &weight, const vector<vector<double> > &bias);
 	~Net();
-	vector<vector<double>> feedforward(vector<double> &input);
-	vector<vector<vector<double>>> backpropagation(vector<vector<double>> &prediction, vector<double> &trueValue);
-	void gradient_descent(vector<vector<vector<double>>> &gradient, double learning_rate);
+	vector<vector<double>> feedforward(const vector<double> &input);
+	vector<vector<vector<double>>> backpropagation(const vector<vector<double>> &prediction, const vector<double> &trueValue);
+	void gradient_descent(const vector<vector<vector<double>>> &gradient, double learning_rate);
 };
 
 //// Helper Functions and Objects ////
@@ -77,8 +77,8 @@ double error_function(vector<double> prediction, vector<double> trueValue);
 double sigmoid(double x);
 double sigmoid_derivative(double x);
 
-double dot(vector<double> &vec1, vector<double> &vec2);
-double operator*(vector<double> &vec1, vector<double> &vec2);
+double dot(const vector<double> &vec1, const vector<double> &vec2);
+double operator*(const vector<double> &vec1, const vector<double> &vec2);
 
 vector<vector<double>> multiply(vector<vector<double>> &mat1, vector<vector<double>> &mat2);
 vector<vector<double>> operator*(vector<vector<double>> mat1, vector<vector<double>> mat2);

@@ -6,15 +6,14 @@
 //  Copyright © 2019 Kevin Zhang. All rights reserved.
 //
 
-
-
 #include "Headers.hpp"
 
 int main() {
 
 	double learning_rate = 0.01;
+	int epoch = 100;
 	double lastError = 10000000;
-	string dataAddress = "C:/Users/Jkzhang/Desktop/C++/weight_height.csv";
+	string dataAddress = "C:/Users/Jkzhang/source/repos/NeuralNet/weight_height.csv";
 	int targetDim = 1;
 	/*
 	cout<<"Enter the Number of Prediction Targets:";
@@ -59,6 +58,14 @@ int main() {
 	}
 	// Parsing Data Done //
 
+	// Spilting the Data into Training and Testing //
+	data = shuffleData(data);
+	int spiltsize;
+	spiltsize = int(data.size()*0.8);
+	vector<vector<double>> train(data.begin(), data.begin() + spiltsize);
+	vector<vector<double>> test(data.begin() + spiltsize, data.end());
+	// Finished Spilting //
+
 	vector<vector<double>> pred;
 	vector<vector<vector<double>>> grad;
 
@@ -72,7 +79,7 @@ int main() {
 	cout << "Enter the Number of Hidden Layers:";
 	cin >> numLayer;
 	cout << endl;
-	dataLayer = int(data[0].size()) - targetDim;
+	dataLayer = int(train[0].size()) - targetDim;
 	vector<int> numNeuron;
 	numNeuron.push_back(dataLayer);
 	for (int i = 0; i < numLayer; i++) {
@@ -86,79 +93,48 @@ int main() {
 	ibias = initializeBias(numNeuron, ibias);
 	Net testnet(iweight, ibias);
 	cout << "Net Constructed" << endl;
-
-	vector<double> x;
-	vector<double> y;
-	int n = 10;
-	for (int i = 0; i < n; i++) {
-		data = shuffleData(data);
+	for (int i = 0; i < epoch; i++) {
+		data = shuffleData(train);
 		for (size_t j = 0; j < data.size(); j++) {
-			vector<double> y(data[j].begin(), data[j].begin() + targetDim);
-			vector<double> x(data[j].begin() + targetDim, data[j].end());
+			vector<double> y(train[j].begin(), train[j].begin() + targetDim);
+			vector<double> x(train[j].begin() + targetDim, train[j].end());
 			pred = testnet.feedforward(x);
 			error = error + error_function(pred.back(), y);
 			grad = testnet.backpropagation(pred, y);
 			testnet.gradient_descent(grad, learning_rate);
 		}
-		/*
-		if (error > lastError){
-			learning_rate = learning_rate*0.9;
+
+		if (error > lastError) {
+			learning_rate = learning_rate * 0.9;
 		}
 		else {
-			learning_rate = learning_rate*1.1;
+			learning_rate = learning_rate * 1.1;
 		}
-		*/
+
 		cout << "-----Error of Batch " << i << " -----:" << error << endl;
 		lastError = error;
 		error = 0;
 	}
-	//cout << "-----True Value-----:"<<trueValue[0]<<endl;
-
 
 	// Validation //
-	vector<double> test1;
-	vector<double> test2;
-	vector<double> test3;
-	vector<double> test4;
-
-	test1.push_back(-3);
-	test1.push_back(-40);
-	test2.push_back(6);
-	test2.push_back(65);
-	test3.push_back(8);
-	test3.push_back(55);
-	test4.push_back(5);
-	test4.push_back(8);
-
-	vector<double> result1;
-	vector<double> result2;
-	vector<double> result3;
-	vector<double> result4;
-
-	result1 = testnet.feedforward(test1).back();
-	result2 = testnet.feedforward(test2).back();
-	result3 = testnet.feedforward(test3).back();
-	result4 = testnet.feedforward(test4).back();
-
-	cout << "-----Prediction Angela-----:" << result1[0] << endl;
-	cout << "-----Prediction John-----:" << result2[0] << endl;
-	cout << "-----Prediction Kevin-----:" << result3[0] << endl;
-	cout << "-----Prediction Alina-----:" << result4[0] << endl;
-
-	ofstream myFile("C:/Users/Jkzhang/Desktop/C++/Prediction.csv");
-
-	// Send data to the stream
-	myFile << result1[0];
-	myFile << "\n";
-	myFile << result2[0];
-	myFile << "\n";
-	myFile << result3[0];
-	myFile << "\n";
-	myFile << result4[0];
-	myFile << "\n";
-
-	// Close the file
+	int correct = 0;
+	ofstream myFile("C:/Users/Jkzhang/source/repos/NeuralNet/Prediction.csv");
+	for (size_t j = 0; j < test.size(); j++) {
+		vector<double> y(test[j].begin(), test[j].begin() + targetDim);
+		vector<double> x(test[j].begin() + targetDim, test[j].end());
+		pred = testnet.feedforward(x);
+		if (pred.back()[0] - y[0] < 0.5) {
+			correct = correct + 1;
+		}
+		myFile << pred.back()[0];
+		for (size_t i = 0; i < test[j].size(); i++) {
+			myFile << ",";
+			myFile << test[j][i];
+		}
+		myFile << "\n";
+	}
+	cout << "Validation Accuracy %" << double(correct) / test.size() * 100 << endl;
 	myFile.close();
-
+	// Validation Finished //
 	return 0;
 }
